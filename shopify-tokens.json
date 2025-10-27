@@ -1,0 +1,239 @@
+[
+  {
+    "token": "e2DtcjHyRQ6T5-doLJLBdV:APA91bGNYw5Rjzdc23Cm0NsXgIkVZosbflOe90kjfl7czjcLe0UzorsvxXKEAH0ahCse9Z28eAIPkYK6epN7Fz0zMvLGlNruPTKa924T4UGv3Jb4lIraX64",
+    "platform": "android",
+    "timestamp": "2025-10-25T01:48:35.517Z",
+    "source": "fcm_monitor_test",
+    "customerId": "anonymous_1761355605324",
+    "email": "anonymous_1761355605324@gst3d.eu",
+    "deviceInfo": {
+      "appVersion": "1.0.0",
+      "deviceModel": "Unknown Device",
+      "osVersion": "Unknown",
+      "language": "es-ES",
+      "timezone": "Europe/Madrid",
+      "brand": "Unknown",
+      "isEmulator": false
+    },
+    "createdAt": "2025-10-25T01:48:34.155Z",
+    "updatedAt": "2025-10-25T01:48:34.155Z",
+    "country": "ES",
+    "region": "España",
+    "city": "Ciudad",
+    "latitude": 39.74375,
+    "longitude": -8.810741666666667,
+    "timezone": "Europe/Madrid",
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_España",
+      "platform_android",
+      "authenticated_users"
+    ],
+    "isLoggedIn": true,
+    "hasLocationPermission": true,
+    "lastSeen": "2025-10-25T01:48:34.155Z"
+  },
+  {
+    "token": "eqpZ6owTS5iOk1x2kidEgZ:APA91bE_xgDQOFEL5Vqka1k7LX24-7GfdEXcfhZmGjPNc3Yk3Jd8T9d3LifKd2P4bR4KlwYxQroEFvKmLKw9zDP4_6DZajaWumhBsBCz6MW5_qLmnsfB4AA",
+    "platform": "android",
+    "timestamp": "2025-10-24T00:15:01.291Z",
+    "country": "ES",
+    "region": "Desconocido",
+    "city": "Ciudad",
+    "latitude": 0,
+    "longitude": 0,
+    "timezone": "Europe/Madrid",
+    "deviceInfo": {
+      "appVersion": "1.0.0",
+      "deviceModel": "Unknown Device",
+      "osVersion": "Unknown",
+      "language": "es-ES",
+      "timezone": "Europe/Madrid",
+      "brand": "Unknown",
+      "isEmulator": false
+    },
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_Desconocido",
+      "platform_android",
+      "authenticated_users"
+    ],
+    "isLoggedIn": true,
+    "hasLocationPermission": false,
+    "customerId": "anonymous_1761264844592",
+    "email": "anonymous_1761264844592@gst3d.eu",
+    "createdAt": "2025-10-24T00:16:06.551Z",
+    "updatedAt": "2025-10-24T00:16:06.551Z",
+    "lastSeen": "2025-10-24T00:16:06.551Z"
+  },
+  {
+    "token": "dQrN-dAKSTOuZsNYqE23rT:APA91bHQ4c3yMS6k4gRdMsvOcUyptXQkTW5TWXwt7EffsG1ikrnkaJfg-3bjnAtPEc9BZr9WHtx1Xc2deHIEQeNOT1MsycgcmLzR9m2T6leeTbC6hBw2pCE",
+    "customerId": "anonymous_1761243242034",
+    "email": "anonymous_1761243242035@gst3d.eu",
+    "platform": "android",
+    "timestamp": "2025-10-23T18:42:25.690Z",
+    "createdAt": "2025-10-23T18:42:21.986Z",
+    "updatedAt": "2025-10-23T18:42:21.986Z"
+  },
+  {
+    "token": "fdrjWMsAQDWSlu7T_eJ9eX:APA91bEZsXrprx7uFS-MugfccUFPLqUYWWPs8Gx0EbG8irYp2j6zr7WVv5qKBnvTKsHf6YfKpaMAE6Iq_RgjtYGLEe4uuW3Ad62asueeT6jj0YDXQd7vq5A",
+    "platform": "android",
+    "timestamp": "2025-10-16T21:56:53.276Z",
+    "country": "US",
+    "region": "Estados Unidos",
+    "city": "Ciudad",
+    "latitude": 37.421998333333335,
+    "longitude": -122.084,
+    "timezone": "America/Los_Angeles",
+    "deviceInfo": {
+      "appVersion": "1.0",
+      "deviceModel": "sdk_gphone64_x86_64",
+      "osVersion": "14",
+      "language": "sdk_gphone64_x86_64",
+      "timezone": "GMT",
+      "brand": "google",
+      "isEmulator": true
+    },
+    "segments": [
+      "app_users",
+      "country_US",
+      "region_Estados_Unidos",
+      "platform_android",
+      "anonymous_users"
+    ],
+    "isLoggedIn": false,
+    "hasLocationPermission": true,
+    "createdAt": "2025-10-16T21:56:59.221Z",
+    "updatedAt": "2025-10-16T21:56:59.221Z",
+    "lastSeen": "2025-10-16T21:56:59.221Z"
+  },
+  {
+    "token": "test_token_123",
+    "platform": "android",
+    "country": "ES",
+    "region": "Test",
+    "city": "Test",
+    "timestamp": "2025-10-25T16:39:43.789Z",
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_Test",
+      "platform_android",
+      "anonymous_users"
+    ],
+    "createdAt": "2025-10-25T16:39:43.891Z",
+    "updatedAt": "2025-10-25T16:39:43.891Z",
+    "lastSeen": "2025-10-25T16:39:43.891Z"
+  },
+  {
+    "token": "eMY9-_wGTKCWN-inE89a9u:APA91bGBLPxspSAtZvnSopbp80Ggyf5E8881J3-72M6vd7bdIAhra64NtZx-csBI-JOVyoylNl6rvYO7k9CyaWI6N3yBZfVvAFtfGumEscjQiyJR9OCQwa8",
+    "platform": "android",
+    "timestamp": "2025-10-25T17:50:32.690Z",
+    "country": "ES",
+    "region": "España",
+    "city": "Madrid",
+    "latitude": 0,
+    "longitude": 0,
+    "timezone": "Europe/Madrid",
+    "deviceInfo": {
+      "appVersion": "1.0.0",
+      "deviceModel": "Unknown Device",
+      "osVersion": "Unknown",
+      "language": "es-ES",
+      "timezone": "Europe/Madrid",
+      "brand": "Unknown",
+      "isEmulator": false
+    },
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_España",
+      "platform_android",
+      "authenticated_users"
+    ],
+    "isLoggedIn": true,
+    "hasLocationPermission": true,
+    "customerId": "anonymous_1761409890894",
+    "email": "anonymous_1761409890894@gst3d.eu",
+    "createdAt": "2025-10-25T17:50:32.752Z",
+    "updatedAt": "2025-10-25T17:50:32.752Z",
+    "lastSeen": "2025-10-25T17:50:32.752Z"
+  },
+  {
+    "token": "ea0IUk21TiywO1pbca30Cc:APA91bHHY6zEKNpo6mHQ_0MZe4SN88ziugcgWyQIckMpXrIGT5QLu4S17im_sUAxTHrHLLkUBqbYK6p-jsRHeS6FOAENvkaxh13xteU-ysKxTP2D3lD4N74",
+    "platform": "android",
+    "timestamp": "2025-10-25T17:42:15.669Z",
+    "country": "ES",
+    "region": "España",
+    "city": "Madrid",
+    "latitude": 0,
+    "longitude": 0,
+    "timezone": "Europe/Madrid",
+    "deviceInfo": {
+      "appVersion": "1.0.0",
+      "deviceModel": "Unknown Device",
+      "osVersion": "Unknown",
+      "language": "es-ES",
+      "timezone": "Europe/Madrid",
+      "brand": "Unknown",
+      "isEmulator": false
+    },
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_España",
+      "platform_android",
+      "authenticated_users"
+    ],
+    "isLoggedIn": true,
+    "hasLocationPermission": true,
+    "customerId": "anonymous_1761413891728",
+    "email": "anonymous_1761413891728@gst3d.eu",
+    "createdAt": "2025-10-25T17:42:12.760Z",
+    "updatedAt": "2025-10-25T17:42:12.760Z",
+    "lastSeen": "2025-10-25T17:42:12.760Z"
+  },
+  {
+    "token": "test_new_token_1761419541868",
+    "platform": "android",
+    "customerId": "test_customer_1761419541868",
+    "email": "test_1761419541868@gst3d.eu",
+    "deviceInfo": {
+      "appVersion": "1.0.0",
+      "deviceModel": "Test Device",
+      "osVersion": "Android 14",
+      "language": "es-ES",
+      "timezone": "Europe/Madrid",
+      "brand": "Test",
+      "isEmulator": false
+    },
+    "country": "ES",
+    "region": "España",
+    "city": "Madrid",
+    "latitude": 40.4168,
+    "longitude": -3.7038,
+    "timezone": "Europe/Madrid",
+    "segments": [
+      "app_users",
+      "country_ES",
+      "region_España",
+      "platform_android",
+      "authenticated_users"
+    ],
+    "isLoggedIn": true,
+    "hasLocationPermission": true,
+    "createdAt": "2025-10-25T19:12:21.892Z",
+    "updatedAt": "2025-10-25T19:12:21.892Z",
+    "lastSeen": "2025-10-25T19:12:21.892Z"
+  },
+  {
+    "token": "test_general_token_1761419541902",
+    "platform": "android",
+    "customerId": "general_test_1761419541902",
+    "email": "general_1761419541902@gst3d.eu",
+    "createdAt": "2025-10-25T19:12:21.905Z",
+    "updatedAt": "2025-10-25T19:12:21.905Z"
+  }
+]

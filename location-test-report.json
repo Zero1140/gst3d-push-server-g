@@ -1,0 +1,197 @@
+{
+  "timestamp": "2025-10-25T02:06:39.844Z",
+  "totalTests": 17,
+  "passedTests": 16,
+  "failedTests": 1,
+  "criticalFailures": 0,
+  "successRate": "94.1",
+  "testResults": [
+    {
+      "name": "Leiria, Portugal (Usuario)",
+      "coordinates": {
+        "lat": 39.74375,
+        "lng": -8.810741666666667
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "CRITICAL"
+    },
+    {
+      "name": "Lisboa, Portugal",
+      "coordinates": {
+        "lat": 38.7223,
+        "lng": -9.1393
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "HIGH"
+    },
+    {
+      "name": "Porto, Portugal",
+      "coordinates": {
+        "lat": 41.1579,
+        "lng": -8.6291
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "HIGH"
+    },
+    {
+      "name": "Coimbra, Portugal",
+      "coordinates": {
+        "lat": 40.2033,
+        "lng": -8.4103
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Braga, Portugal",
+      "coordinates": {
+        "lat": 41.5518,
+        "lng": -8.4229
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Madrid, España",
+      "coordinates": {
+        "lat": 40.4168,
+        "lng": -3.7038
+      },
+      "expectedCountry": "ES",
+      "detectedCountry": "ES",
+      "passed": true,
+      "priority": "HIGH"
+    },
+    {
+      "name": "Barcelona, España",
+      "coordinates": {
+        "lat": 41.3851,
+        "lng": 2.1734
+      },
+      "expectedCountry": "ES",
+      "detectedCountry": "ES",
+      "passed": true,
+      "priority": "HIGH"
+    },
+    {
+      "name": "Valencia, España",
+      "coordinates": {
+        "lat": 39.4699,
+        "lng": -0.3763
+      },
+      "expectedCountry": "ES",
+      "detectedCountry": "ES",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Sevilla, España",
+      "coordinates": {
+        "lat": 37.3891,
+        "lng": -5.9845
+      },
+      "expectedCountry": "ES",
+      "detectedCountry": "ES",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Badajoz, España (cerca de Portugal)",
+      "coordinates": {
+        "lat": 38.8794,
+        "lng": -6.9706
+      },
+      "expectedCountry": "ES",
+      "detectedCountry": "PT",
+      "passed": false,
+      "priority": "HIGH"
+    },
+    {
+      "name": "Elvas, Portugal (cerca de España)",
+      "coordinates": {
+        "lat": 38.8815,
+        "lng": -7.1628
+      },
+      "expectedCountry": "PT",
+      "detectedCountry": "PT",
+      "passed": true,
+      "priority": "HIGH"
+    },
+    {
+      "name": "París, Francia",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "expectedCountry": "FR",
+      "detectedCountry": "FR",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Londres, Reino Unido",
+      "coordinates": {
+        "lat": 51.5074,
+        "lng": -0.1278
+      },
+      "expectedCountry": "GB",
+      "detectedCountry": "GB",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Roma, Italia",
+      "coordinates": {
+        "lat": 41.9028,
+        "lng": 12.4964
+      },
+      "expectedCountry": "IT",
+      "detectedCountry": "IT",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Berlín, Alemania",
+      "coordinates": {
+        "lat": 52.52,
+        "lng": 13.405
+      },
+      "expectedCountry": "DE",
+      "detectedCountry": "DE",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Nueva York, Estados Unidos",
+      "coordinates": {
+        "lat": 40.7128,
+        "lng": -74.006
+      },
+      "expectedCountry": "US",
+      "detectedCountry": "US",
+      "passed": true,
+      "priority": "MEDIUM"
+    },
+    {
+      "name": "Ciudad de México, México",
+      "coordinates": {
+        "lat": 19.4326,
+        "lng": -99.1332
+      },
+      "expectedCountry": "MX",
+      "detectedCountry": "MX",
+      "passed": true,
+      "priority": "MEDIUM"
+    }
+  ]
+}
