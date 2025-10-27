@@ -11,4 +11,3 @@ node_modules/
 *.pem
 *.zip
 .env
-firebase-service-account.json

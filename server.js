@@ -4,7 +4,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 
 // Configurar Firebase Admin
-const serviceAccount = require('../gst3dapp-firebase-adminsdk-fbsvc-3bc31ec6b9.json');
+const serviceAccount = require('./firebase-service-account.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
