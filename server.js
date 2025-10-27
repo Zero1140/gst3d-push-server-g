@@ -4,7 +4,14 @@ const path = require('path');
 const admin = require('firebase-admin');
 
 // Configurar Firebase Admin
-const serviceAccount = require('./firebase-service-account.json');
+// Intentar cargar desde múltiples ubicaciones (desarrollo local y Render)
+let serviceAccount;
+try {
+  serviceAccount = require('./firebase-service-account.json');
+} catch (err) {
+  console.log('Intentando cargar desde ruta de Render...');
+  serviceAccount = require('/opt/render/project/src/firebase-service-account.json');
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
