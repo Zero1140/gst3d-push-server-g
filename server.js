@@ -269,12 +269,18 @@ app.get('/api/push/tokens', bearerTokenMiddleware, (req, res) => {
   try {
     console.log('📋 [SERVER] Tokens request received');
     
-    const tokens = registeredTokens.map(t => t.token);
-    
     res.json({
       status: 200,
-      count: tokens.length,
-      tokens: tokens,
+      count: registeredTokens.length,
+      data: registeredTokens.map(t => ({
+        token: t.token.substring(0, 20) + '...',
+        platform: t.platform,
+        country: t.country || 'UNKNOWN',
+        countryName: t.countryName || 'Unknown',
+        city: t.city || 'Unknown',
+        region: t.region || 'Unknown',
+        registeredAt: t.registeredAt
+      })),
       lastUpdated: new Date().toISOString()
     });
 
@@ -302,6 +308,9 @@ app.get('/api/push/tokens/info', bearerTokenMiddleware, (req, res) => {
         source: t.source,
         customerId: t.customerId,
         email: t.email,
+        country: t.country || 'UNKNOWN',
+        countryName: t.countryName || 'Unknown',
+        city: t.city || 'Unknown',
         registeredAt: t.registeredAt,
         lastSeen: t.lastSeen
       })),
