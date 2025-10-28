@@ -399,11 +399,17 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
         })
       },
       data: {
+        title: title,
+        body: body,
+        ...(imageUrl && { imageUrl: imageUrl }),
         ...data,
         timestamp: new Date().toISOString(),
         source: 'push_server'
       }
     };
+
+    // Eliminar notification payload - la app Android mostrará desde data
+    delete baseMessage.notification;
 
     // Enviar a cada token registrado
     for (const tokenData of registeredTokens) {
