@@ -25,11 +25,17 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// CORS
+// CORS - Configuración completa
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  // Manejar preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   next();
 });
 
@@ -83,10 +89,17 @@ app.get('/api/status', bearerTokenMiddleware, (req, res) => {
 
 // Registrar token FCM
 app.post('/api/push/token', bearerTokenMiddleware, (req, res) => {
+  console.log('══════════════════════════════════════════════════');
+  console.log('🚀 [SERVER] ===== TOKEN REGISTRATION REQUEST =====');
+  console.log('══════════════════════════════════════════════════');
+  console.log('📍 IP:', req.ip || req.connection.remoteAddress);
+  console.log('🌐 Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('📦 Body recibido:', JSON.stringify(req.body, null, 2));
+  
   try {
     const { token, platform, timestamp, source, customerId, email } = req.body;
 
-    console.log('📱 [SERVER] Token registration request:', {
+    console.log('📱 [SERVER] Parsed data:', {
       token: token ? token.substring(0, 20) + '...' : 'missing',
       platform,
       source,
