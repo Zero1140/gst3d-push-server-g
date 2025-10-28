@@ -411,10 +411,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     // Enviar a cada token registrado
     for (const tokenData of registeredTokens) {
       try {
-        // Construir mensaje con solo data y android (sin notification payload)
         const message = {
-          data: baseMessage.data,
-          android: baseMessage.android,
+          ...baseMessage,
           token: tokenData.token
         };
 
