@@ -43,6 +43,37 @@ app.use(function (req, res, next) {
 let registeredTokens = [];
 let tokenLogs = [];
 
+// Función para detectar país por IP
+async function getCountryByIP(ip) {
+  try {
+    // Obtener IP real (Render puede pasar IPs a través de proxy)
+    let realIP = ip;
+    
+    // ip-api.com es gratis y no requiere API key
+    const response = await fetch(`http://ip-api.com/json/${realIP}?fields=status,country,countryCode,region,regionName,city,lat,lon`);
+    const data = await response.json();
+    
+    if (data.status === 'success') {
+      console.log('🌍 [IP] País detectado:', data.countryCode, '-', data.country);
+      console.log('📍 [IP] Ciudad:', data.city, ', Región:', data.regionName);
+      return {
+        country: data.countryCode,
+        countryName: data.country,
+        region: data.regionName,
+        city: data.city,
+        latitude: data.lat,
+        longitude: data.lon
+      };
+    } else {
+      console.log('⚠️ [IP] No se pudo detectar ubicación');
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ [IP] Error detectando ubicación:', error.message);
+    return null;
+  }
+}
+
 // Middleware de autenticación
 const bearerTokenMiddleware = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -88,7 +119,7 @@ app.get('/api/status', bearerTokenMiddleware, (req, res) => {
 });
 
 // Registrar token FCM
-app.post('/api/push/token', bearerTokenMiddleware, (req, res) => {
+app.post('/api/push/token', bearerTokenMiddleware, async (req, res) => {
   console.log('══════════════════════════════════════════════════');
   console.log('🚀 [SERVER] ===== TOKEN REGISTRATION REQUEST =====');
   console.log('══════════════════════════════════════════════════');
@@ -116,6 +147,10 @@ app.post('/api/push/token', bearerTokenMiddleware, (req, res) => {
       });
     }
 
+    // Detectar país por IP
+    const clientIP = req.ip || req.connection.remoteAddress;
+    const locationData = await getCountryByIP(clientIP);
+
     // Verificar si el token ya existe
     const existingTokenIndex = registeredTokens.findIndex(t => t.token === token);
     
@@ -127,7 +162,10 @@ app.post('/api/push/token', bearerTokenMiddleware, (req, res) => {
       customerId: customerId || null,
       email: email || null,
       registeredAt: new Date().toISOString(),
-      lastSeen: new Date().toISOString()
+      lastSeen: new Date().toISOString(),
+      // Agregar datos de ubicación
+      ...(locationData || {}),
+      ip: clientIP
     };
 
     if (existingTokenIndex !== -1) {
@@ -163,7 +201,10 @@ app.post('/api/push/token', bearerTokenMiddleware, (req, res) => {
       data: {
         token: token.substring(0, 20) + '...',
         platform: tokenData.platform,
-        registeredAt: tokenData.registeredAt
+        registeredAt: tokenData.registeredAt,
+        country: locationData?.country || 'UNKNOWN',
+        countryName: locationData?.countryName || 'Unknown',
+        city: locationData?.city || 'Unknown'
       }
     });
 
