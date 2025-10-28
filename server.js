@@ -408,14 +408,17 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       }
     };
 
-    // Eliminar notification payload - la app Android mostrará desde data
-    delete baseMessage.notification;
+    // Reconstruir mensaje SIN notification payload (la app usará data)
+    const messageWithoutNotification = {
+      data: baseMessage.data,
+      android: baseMessage.android
+    };
 
     // Enviar a cada token registrado
     for (const tokenData of registeredTokens) {
       try {
         const message = {
-          ...baseMessage,
+          ...messageWithoutNotification,
           token: tokenData.token
         };
 
