@@ -159,9 +159,32 @@ app.post('/api/push/token', bearerTokenMiddleware, async (req, res) => {
       });
     }
 
-    // Detectar país por IP
-    const clientIP = req.ip || req.connection.remoteAddress;
-    const locationData = await getCountryByIP(clientIP);
+    // Detectar país por IP - primero intentar con Cloudflare, luego con API
+    let locationData = null;
+    
+    // Si Cloudflare está disponible, usar su detección (más rápido)
+    if (req.headers['cf-ipcountry']) {
+      const cfCountry = req.headers['cf-ipcountry'];
+      if (cfCountry && cfCountry !== 'XX' && cfCountry !== 'T1') {
+        console.log('🌍 [IP] País detectado por Cloudflare:', cfCountry);
+        locationData = {
+          country: cfCountry,
+          countryName: cfCountry, // Cloudflare solo da código
+          region: null,
+          city: null,
+          latitude: 0,
+          longitude: 0,
+          source: 'cloudflare'
+        };
+      }
+    }
+    
+    // Si Cloudflare no funcionó, intentar con ip-api.com
+    if (!locationData) {
+      const clientIP = req.headers['true-client-ip'] || req.headers['cf-connecting-ip'] || req.ip || req.connection.remoteAddress;
+      console.log('🔍 [IP] Intentando detectar con API, IP:', clientIP);
+      locationData = await getCountryByIP(clientIP);
+    }
 
     // Verificar si el token ya existe
     const existingTokenIndex = registeredTokens.findIndex(t => t.token === token);
