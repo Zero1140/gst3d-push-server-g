@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const admin = require('firebase-admin');
+const http = require('http');
 
 // Configurar Firebase Admin
 // Intentar cargar desde múltiples ubicaciones (desarrollo local y Render)
@@ -50,8 +51,19 @@ async function getCountryByIP(ip) {
     let realIP = ip;
     
     // ip-api.com es gratis y no requiere API key
-    const response = await fetch(`http://ip-api.com/json/${realIP}?fields=status,country,countryCode,region,regionName,city,lat,lon`);
-    const data = await response.json();
+    const data = await new Promise((resolve) => {
+      http.get(`http://ip-api.com/json/${realIP}?fields=status,country,countryCode,region,regionName,city,lat,lon`, (res) => {
+        let body = '';
+        res.on('data', chunk => body += chunk);
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(body));
+          } catch (e) {
+            resolve({ status: 'fail' });
+          }
+        });
+      }).on('error', () => resolve({ status: 'fail' }));
+    });
     
     if (data.status === 'success') {
       console.log('🌍 [IP] País detectado:', data.countryCode, '-', data.country);
