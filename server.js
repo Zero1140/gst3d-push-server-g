@@ -22,6 +22,9 @@ admin.initializeApp({
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Configurar trust proxy para que funcione correctamente con Render y Cloudflare
+app.set('trust proxy', true);
+
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -135,8 +138,11 @@ app.post('/api/push/token', bearerTokenMiddleware, async (req, res) => {
   console.log('══════════════════════════════════════════════════');
   console.log('🚀 [SERVER] ===== TOKEN REGISTRATION REQUEST =====');
   console.log('══════════════════════════════════════════════════');
-  console.log('📍 IP:', req.ip || req.connection.remoteAddress);
-  console.log('🌐 Headers:', JSON.stringify(req.headers, null, 2));
+  const clientIP = req.headers['true-client-ip'] || req.headers['cf-connecting-ip'] || req.ip || req.connection.remoteAddress;
+  console.log('📍 IP Cliente:', clientIP);
+  if (req.headers['cf-ipcountry']) {
+    console.log('🌍 Cloudflare Country:', req.headers['cf-ipcountry']);
+  }
   console.log('📦 Body recibido:', JSON.stringify(req.body, null, 2));
   
   try {
@@ -181,9 +187,14 @@ app.post('/api/push/token', bearerTokenMiddleware, async (req, res) => {
     
     // Si Cloudflare no funcionó, intentar con ip-api.com
     if (!locationData) {
-      const clientIP = req.headers['true-client-ip'] || req.headers['cf-connecting-ip'] || req.ip || req.connection.remoteAddress;
+      // Obtener la IP real del cliente (trust proxy está activado)
+      const clientIP = req.headers['true-client-ip'] || req.headers['cf-connecting-ip'] || req.ip || req.connection.remoteAddress || 'unknown';
       console.log('🔍 [IP] Intentando detectar con API, IP:', clientIP);
-      locationData = await getCountryByIP(clientIP);
+      
+      // Solo intentar si tenemos una IP válida
+      if (clientIP && clientIP !== 'unknown' && !clientIP.includes('127.') && !clientIP.includes('::1')) {
+        locationData = await getCountryByIP(clientIP);
+      }
     }
 
     // Verificar si el token ya existe
