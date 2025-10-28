@@ -364,40 +364,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const errors = [];
 
     // Configuración base del mensaje
+    // IMPORTANTE: Usar data-only para Android para evitar problemas con caracteres especiales
     const baseMessage = {
-      notification: {
-        title: title,
-        body: body
-      },
-      android: {
-        priority: priority === 'high' ? 'high' : 'normal',
-        notification: {
-          channelId: 'gst3d_notifications',
-          sound: 'default',
-          ...(imageUrl && { image: imageUrl })
-        }
-      },
-      apns: {
-        payload: {
-          aps: {
-            sound: 'default',
-            ...(priority === 'high' && { contentAvailable: true })
-          }
-        },
-        ...(imageUrl && {
-          fcmOptions: {
-            imageUrl: imageUrl
-          }
-        })
-      },
-      webpush: {
-        ...(imageUrl && {
-          notification: {
-            icon: imageUrl,
-            badge: imageUrl
-          }
-        })
-      },
       data: {
         title: title,
         body: body,
@@ -405,6 +373,31 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
         ...data,
         timestamp: new Date().toISOString(),
         source: 'push_server'
+      },
+      android: {
+        priority: priority === 'high' ? 'high' : 'normal'
+      },
+      apns: {
+        payload: {
+          aps: {
+            alert: {
+              title: title,
+              body: body
+            },
+            sound: 'default',
+            ...(priority === 'high' && { contentAvailable: true })
+          }
+        }
+      },
+      webpush: {
+        notification: {
+          title: title,
+          body: body,
+          ...(imageUrl && {
+            icon: imageUrl,
+            badge: imageUrl
+          })
+        }
       }
     };
 
