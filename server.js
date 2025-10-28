@@ -331,11 +331,13 @@ app.get('/api/push/tokens/info', bearerTokenMiddleware, (req, res) => {
 // Enviar notificación a todos los tokens
 app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
   try {
-    const { title, body, data } = req.body;
+    const { title, body, data, imageUrl, priority } = req.body;
 
     console.log('📨 [SERVER] Send notification request:', {
       title,
       body,
+      imageUrl: imageUrl || 'none',
+      priority: priority || 'normal',
       tokenCount: registeredTokens.length,
       timestamp: new Date().toISOString()
     });
@@ -358,19 +360,53 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const results = [];
     const errors = [];
 
+    // Configuración base del mensaje
+    const baseMessage = {
+      notification: {
+        title: Buffer.from(title, 'utf8').toString('utf8'),
+        body: Buffer.from(body, 'utf8').toString('utf8')
+      },
+      android: {
+        priority: priority === 'high' ? 'high' : 'normal',
+        notification: {
+          channelId: 'gst3d_notifications',
+          sound: 'default',
+          ...(imageUrl && { imageUrl: imageUrl })
+        }
+      },
+      apns: {
+        payload: {
+          aps: {
+            sound: 'default',
+            ...(priority === 'high' && { contentAvailable: true })
+          }
+        },
+        ...(imageUrl && {
+          fcmOptions: {
+            imageUrl: imageUrl
+          }
+        })
+      },
+      webpush: {
+        ...(imageUrl && {
+          notification: {
+            icon: imageUrl,
+            badge: imageUrl
+          }
+        })
+      },
+      data: {
+        ...data,
+        timestamp: new Date().toISOString(),
+        source: 'push_server'
+      }
+    };
+
     // Enviar a cada token registrado
     for (const tokenData of registeredTokens) {
       try {
         const message = {
-          notification: {
-            title,
-            body
-          },
-          data: {
-            ...data,
-            timestamp: new Date().toISOString(),
-            source: 'push_server'
-          },
+          ...baseMessage,
           token: tokenData.token
         };
 
