@@ -408,17 +408,13 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       }
     };
 
-    // Reconstruir mensaje SIN notification payload (la app usará data)
-    const messageWithoutNotification = {
-      data: baseMessage.data,
-      android: baseMessage.android
-    };
-
     // Enviar a cada token registrado
     for (const tokenData of registeredTokens) {
       try {
+        // Construir mensaje con solo data y android (sin notification payload)
         const message = {
-          ...messageWithoutNotification,
+          data: baseMessage.data,
+          android: baseMessage.android,
           token: tokenData.token
         };
 
