@@ -4,6 +4,9 @@ const path = require('path');
 const admin = require('firebase-admin');
 const http = require('http');
 
+// Configurar encoding UTF-8 por defecto
+process.stdout.setDefaultEncoding('utf8');
+
 // Configurar Firebase Admin
 // Intentar cargar desde múltiples ubicaciones (desarrollo local y Render)
 let serviceAccount;
@@ -26,8 +29,8 @@ const port = process.env.PORT || 3000;
 app.set('trust proxy', true);
 
 // Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS - Configuración completa
 app.use(function (req, res, next) {
@@ -363,15 +366,15 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     // Configuración base del mensaje
     const baseMessage = {
       notification: {
-        title: Buffer.from(title, 'utf8').toString('utf8'),
-        body: Buffer.from(body, 'utf8').toString('utf8')
+        title: title,
+        body: body
       },
       android: {
         priority: priority === 'high' ? 'high' : 'normal',
         notification: {
           channelId: 'gst3d_notifications',
           sound: 'default',
-          ...(imageUrl && { imageUrl: imageUrl })
+          ...(imageUrl && { image: imageUrl })
         }
       },
       apns: {
