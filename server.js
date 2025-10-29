@@ -412,15 +412,15 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const errors = [];
 
     // Configuración base del mensaje
-    // ACTUALIZADO: Codificar texto con acentos en Base64 para evitar problemas de UTF-8
-    // Firebase Admin SDK tiene problemas con UTF-8 en payload 'data', usamos Base64 como solución
+    // ACTUALIZADO: Intentar enviar acentos directamente en ambos payloads
+    // Base64 en data para foreground, acentos directos en notification para background
     const baseMessage = {
       notification: {
-        title: removeAccentsButKeepEmojis(title),  // SIN acentos, CON emojis (fallback seguro)
-        body: removeAccentsButKeepEmojis(body)      // SIN acentos, CON emojis
+        title: title,  // Acentos + emojis directamente (intentamos, puede funcionar ahora)
+        body: body      // Acentos + emojis directamente
       },
       data: {
-        // Codificar en Base64 para evitar problemas de codificación UTF-8
+        // Codificar en Base64 para evitar problemas de codificación UTF-8 en foreground
         title: Buffer.from(title, 'utf8').toString('base64'),  // Base64 con acentos + emojis
         body: Buffer.from(body, 'utf8').toString('base64'),    // Base64 con acentos + emojis
         encoded: 'true',  // Indicador para Android de que necesita decodificar
