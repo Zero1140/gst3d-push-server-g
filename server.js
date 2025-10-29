@@ -415,14 +415,17 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     // SOLUCION DEFINITIVA: Usar SOLO payload 'data' para Android
     // Esto fuerza a Android a llamar siempre a onMessageReceived() donde se decodifica Base64
     // Eliminamos 'notification' para Android para evitar que Firebase corrompa UTF-8
+    // IMPORTANTE: Usar claves 'd_title' y 'd_body' en lugar de 'title'/'body' para evitar conflictos
+    // con campos reservados de Firebase que algunos OEMs procesan automáticamente
     const baseMessage = {
       // NO incluir 'notification' para Android - solo usar 'data'
       // Esto garantiza que siempre se llame a onMessageReceived() y se decodifique Base64
       data: {
-        // Codificar en Base64 para evitar problemas de codificación UTF-8
-        title: Buffer.from(title, 'utf8').toString('base64'),  // Base64 con acentos + emojis
-        body: Buffer.from(body, 'utf8').toString('base64'),    // Base64 con acentos + emojis
-        encoded: 'true',  // Indicador para Android de que necesita decodificar
+        // Usar claves diferentes para evitar conflictos con campos reservados de FCM
+        // Base64 URL-safe para mejor compatibilidad (sin + / = que pueden causar problemas)
+        d_title: Buffer.from(title, 'utf8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        d_body: Buffer.from(body, 'utf8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        encoded: 'b64url',  // Indicador de que usa Base64 URL-safe (sin padding)
         ...(imageUrl && { imageUrl: imageUrl }),
         ...data,
         timestamp: new Date().toISOString(),
