@@ -331,6 +331,25 @@ app.get('/api/push/tokens/info', bearerTokenMiddleware, (req, res) => {
   }
 });
 
+// Función para remover acentos pero mantener emojis (para evitar bug de Firebase con UTF-8)
+function removeAccentsButKeepEmojis(str) {
+  if (!str) return str;
+  
+  return str
+    // Caracteres latinos con acentos
+    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
+    .replace(/ó/g, 'o').replace(/ú/g, 'u')
+    .replace(/ñ/g, 'n').replace(/ç/g, 'c')
+    .replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I')
+    .replace(/Ó/g, 'O').replace(/Ú/g, 'U')
+    .replace(/Ñ/g, 'N').replace(/Ç/g, 'C')
+    // Caracteres especiales adicionales
+    .replace(/ü/g, 'u').replace(/Ü/g, 'U')
+    .replace(/¿/g, '?').replace(/¡/g, '!')
+    .replace(/€/g, 'EUR').replace(/£/g, 'GBP').replace(/¥/g, 'JPY');
+  // Los emojis se mantienen intactos
+}
+
 // Enviar notificación a todos los tokens
 app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
   try {
@@ -364,14 +383,15 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const errors = [];
 
     // Configuración base del mensaje
+    // OPCIÓN C: Notification sin acentos (fallback seguro) + Data con acentos (principal)
     const baseMessage = {
       notification: {
-        title: title,
-        body: body
+        title: removeAccentsButKeepEmojis(title),  // SIN acentos, CON emojis
+        body: removeAccentsButKeepEmojis(body)      // SIN acentos, CON emojis
       },
       data: {
-        title: title,
-        body: body,
+        title: title,  // ORIGINAL con acentos y emojis
+        body: body,    // ORIGINAL con acentos y emojis
         ...(imageUrl && { imageUrl: imageUrl }),
         ...data,
         timestamp: new Date().toISOString(),
@@ -384,6 +404,23 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
           sound: 'default',
           ...(imageUrl && { image: imageUrl })
         }
+      },
+      apns: {
+        payload: {
+          aps: {
+            alert: {
+              title: title,  // iOS puede usar acentos directamente
+              body: body     // iOS puede usar acentos directamente
+            },
+            sound: 'default',
+            ...(priority === 'high' && { contentAvailable: true })
+          }
+        },
+        ...(imageUrl && {
+          fcmOptions: {
+            imageUrl: imageUrl
+          }
+        })
       }
     };
 
