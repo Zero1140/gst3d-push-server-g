@@ -350,10 +350,10 @@ function removeAccentsButKeepEmojis(str) {
   // Los emojis se mantienen intactos
 }
 
-// Enviar notificación a todos los tokens
+// Enviar notificación a todos los tokens (o filtrado por país/IP)
 app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
   try {
-    const { title, body, data, imageUrl, priority } = req.body;
+    const { title, body, data, imageUrl, priority, country, countryCode, ip } = req.body;
 
     console.log('📨 [SERVER] Send notification request:', {
       title,
@@ -361,6 +361,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       imageUrl: imageUrl || 'none',
       priority: priority || 'normal',
       tokenCount: registeredTokens.length,
+      filterByCountry: country || countryCode || null,
+      filterByIP: ip || null,
       timestamp: new Date().toISOString()
     });
 
@@ -379,19 +381,49 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       });
     }
 
+    // Filtrar tokens por país o IP si se especifica
+    let tokensToSend = [...registeredTokens];
+    
+    if (country || countryCode) {
+      const filterCountry = (countryCode || country).toUpperCase();
+      tokensToSend = tokensToSend.filter(t => {
+        const tokenCountry = (t.country || '').toUpperCase();
+        return tokenCountry === filterCountry;
+      });
+      console.log(`🌍 [FILTER] Filtrado por país: ${filterCountry}, tokens encontrados: ${tokensToSend.length}`);
+    }
+    
+    if (ip) {
+      tokensToSend = tokensToSend.filter(t => {
+        return t.ip === ip || (t.ip && t.ip.includes(ip));
+      });
+      console.log(`📍 [FILTER] Filtrado por IP: ${ip}, tokens encontrados: ${tokensToSend.length}`);
+    }
+
+    if (tokensToSend.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        error: 'No tokens found',
+        message: `No devices found matching the filter criteria${country || countryCode ? ` (country: ${country || countryCode})` : ''}${ip ? ` (IP: ${ip})` : ''}`
+      });
+    }
+
     const results = [];
     const errors = [];
 
     // Configuración base del mensaje
-    // OPCIÓN C: Notification sin acentos (fallback seguro) + Data con acentos (principal)
+    // ACTUALIZADO: Codificar texto con acentos en Base64 para evitar problemas de UTF-8
+    // Firebase Admin SDK tiene problemas con UTF-8 en payload 'data', usamos Base64 como solución
     const baseMessage = {
       notification: {
-        title: removeAccentsButKeepEmojis(title),  // SIN acentos, CON emojis
+        title: removeAccentsButKeepEmojis(title),  // SIN acentos, CON emojis (fallback seguro)
         body: removeAccentsButKeepEmojis(body)      // SIN acentos, CON emojis
       },
       data: {
-        title: title,  // ORIGINAL con acentos y emojis
-        body: body,    // ORIGINAL con acentos y emojis
+        // Codificar en Base64 para evitar problemas de codificación UTF-8
+        title: Buffer.from(title, 'utf8').toString('base64'),  // Base64 con acentos + emojis
+        body: Buffer.from(body, 'utf8').toString('base64'),    // Base64 con acentos + emojis
+        encoded: 'true',  // Indicador para Android de que necesita decodificar
         ...(imageUrl && { imageUrl: imageUrl }),
         ...data,
         timestamp: new Date().toISOString(),
@@ -424,8 +456,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       }
     };
 
-    // Enviar a cada token registrado
-    for (const tokenData of registeredTokens) {
+    // Enviar a cada token filtrado
+    for (const tokenData of tokensToSend) {
       try {
         const message = {
           ...baseMessage,
@@ -436,6 +468,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
         results.push({
           token: tokenData.token.substring(0, 20) + '...',
           platform: tokenData.platform,
+          country: tokenData.country || 'UNKNOWN',
+          ip: tokenData.ip || 'unknown',
           messageId: response,
           success: true
         });
@@ -446,6 +480,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
         errors.push({
           token: tokenData.token.substring(0, 20) + '...',
           platform: tokenData.platform,
+          country: tokenData.country || 'UNKNOWN',
+          ip: tokenData.ip || 'unknown',
           error: error.message,
           success: false
         });
@@ -459,7 +495,7 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       }
     }
 
-    // Limpiar tokens inválidos
+    // Limpiar tokens inválidos de la lista completa
     const beforeCount = registeredTokens.length;
     registeredTokens = registeredTokens.filter(t => !t.markForDeletion);
     const removedCount = beforeCount - registeredTokens.length;
@@ -468,11 +504,22 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       console.log(`🧹 [SERVER] Removed ${removedCount} invalid tokens`);
     }
 
+    // Información sobre el filtro aplicado
+    const filterInfo = {};
+    if (country || countryCode) {
+      filterInfo.country = country || countryCode;
+    }
+    if (ip) {
+      filterInfo.ip = ip;
+    }
+
     res.json({
       status: 200,
       message: 'Notification sending completed',
+      filter: Object.keys(filterInfo).length > 0 ? filterInfo : null,
       summary: {
-        totalTokens: beforeCount,
+        totalTokensInServer: beforeCount,
+        tokensMatchingFilter: tokensToSend.length,
         successful: results.length,
         failed: errors.length,
         removed: removedCount
