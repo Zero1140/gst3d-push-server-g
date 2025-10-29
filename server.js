@@ -364,8 +364,11 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const errors = [];
 
     // Configuración base del mensaje
-    // IMPORTANTE: Usar data-only para Android para evitar problemas con caracteres especiales
     const baseMessage = {
+      notification: {
+        title: title,
+        body: body
+      },
       data: {
         title: title,
         body: body,
@@ -375,28 +378,11 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
         source: 'push_server'
       },
       android: {
-        priority: priority === 'high' ? 'high' : 'normal'
-      },
-      apns: {
-        payload: {
-          aps: {
-            alert: {
-              title: title,
-              body: body
-            },
-            sound: 'default',
-            ...(priority === 'high' && { contentAvailable: true })
-          }
-        }
-      },
-      webpush: {
+        priority: priority === 'high' ? 'high' : 'normal',
         notification: {
-          title: title,
-          body: body,
-          ...(imageUrl && {
-            icon: imageUrl,
-            badge: imageUrl
-          })
+          channelId: 'gst3d_notifications',
+          sound: 'default',
+          ...(imageUrl && { image: imageUrl })
         }
       }
     };
