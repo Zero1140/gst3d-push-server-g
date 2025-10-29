@@ -412,15 +412,14 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
     const errors = [];
 
     // Configuración base del mensaje
-    // ACTUALIZADO: Intentar enviar acentos directamente en ambos payloads
-    // Base64 en data para foreground, acentos directos en notification para background
+    // SOLUCION DEFINITIVA: Usar SOLO payload 'data' para Android
+    // Esto fuerza a Android a llamar siempre a onMessageReceived() donde se decodifica Base64
+    // Eliminamos 'notification' para Android para evitar que Firebase corrompa UTF-8
     const baseMessage = {
-      notification: {
-        title: title,  // Acentos + emojis directamente (intentamos, puede funcionar ahora)
-        body: body      // Acentos + emojis directamente
-      },
+      // NO incluir 'notification' para Android - solo usar 'data'
+      // Esto garantiza que siempre se llame a onMessageReceived() y se decodifique Base64
       data: {
-        // Codificar en Base64 para evitar problemas de codificación UTF-8 en foreground
+        // Codificar en Base64 para evitar problemas de codificación UTF-8
         title: Buffer.from(title, 'utf8').toString('base64'),  // Base64 con acentos + emojis
         body: Buffer.from(body, 'utf8').toString('base64'),    // Base64 con acentos + emojis
         encoded: 'true',  // Indicador para Android de que necesita decodificar
@@ -431,11 +430,8 @@ app.post('/api/push/send', bearerTokenMiddleware, async (req, res) => {
       },
       android: {
         priority: priority === 'high' ? 'high' : 'normal',
-        notification: {
-          channelId: 'gst3d_notifications',
-          sound: 'default',
-          ...(imageUrl && { image: imageUrl })
-        }
+        // NO incluir 'notification' aquí - usamos solo 'data' para Android
+        // Esto garantiza que onMessageReceived() siempre se ejecute y decodifique Base64
       },
       apns: {
         payload: {
